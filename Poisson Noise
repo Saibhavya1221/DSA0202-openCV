@@ -1,0 +1,32 @@
+import numpy as np
+
+# Ensure the original image is loaded and in RGB format
+if 'img_rgb' in locals() and img_rgb is not None:
+    # Poisson noise is often applied to count data. 
+    # For image processing, it's typically applied to the pixel intensities directly,
+    # assuming they are related to photon counts.
+    # Scale the image to a larger range to make the Poisson noise more visible, then apply.
+    # The noise level is proportional to the square root of the intensity.
+
+    # Convert image to float and normalize to [0, 1] for easier scaling
+    img_normalized = img_rgb.astype(np.float32) / 255.0
+
+    # A factor to control the intensity of the Poisson noise
+    # Higher factor means more 'counts' and thus less relative noise
+    # Lower factor means fewer 'counts' and thus more relative noise
+    noise_scale_factor = 20 # Adjust this value to control noise intensity
+
+    # Apply Poisson noise. np.random.poisson expects lambda (mean) argument.
+    # The input image here is treated as the lambda parameter for each pixel.
+    poisson_noisy_img_normalized = np.random.poisson(img_normalized * noise_scale_factor).astype(np.float32) / noise_scale_factor
+
+    # Scale back to [0, 255] and convert to uint8
+    poisson_noisy_img_rgb = np.clip(poisson_noisy_img_normalized * 255, 0, 255).astype(np.uint8)
+
+    # Display the image with Poisson noise
+    plt.imshow(poisson_noisy_img_rgb)
+    plt.title('Image with Poisson Noise')
+    plt.axis('off')
+    plt.show()
+else:
+    print("Error: 'img_rgb' is not defined or is empty. Please run the cell that loads the original image first.")
