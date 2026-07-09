@@ -1,0 +1,25 @@
+import numpy as np
+
+# Ensure the original image is loaded and in RGB format
+if 'img_rgb' in locals() and img_rgb is not None:
+    s_p_noisy_img = np.copy(img_rgb)
+    salt_vs_pepper = 0.5 # Proportion of salt vs pepper (0.5 means equal amounts)
+    amount = 0.04 # Overall proportion of pixels to be affected by noise
+
+    # Generate Salt noise
+    num_salt = np.ceil(amount * s_p_noisy_img.size * salt_vs_pepper)
+    coords = [np.random.randint(0, i - 1, int(num_salt)) for i in s_p_noisy_img.shape]
+    s_p_noisy_img[coords[0], coords[1], :] = 255
+
+    # Generate Pepper noise
+    num_pepper = np.ceil(amount * s_p_noisy_img.size * (1.0 - salt_vs_pepper))
+    coords = [np.random.randint(0, i - 1, int(num_pepper)) for i in s_p_noisy_img.shape]
+    s_p_noisy_img[coords[0], coords[1], :] = 0
+
+    # Display the image with salt-and-pepper noise
+    plt.imshow(s_p_noisy_img)
+    plt.title('Image with Salt-and-Pepper Noise')
+    plt.axis('off')
+    plt.show()
+else:
+    print("Error: 'img_rgb' is not defined or is empty. Please run the cell that loads the original image first.")
