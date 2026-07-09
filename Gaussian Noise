@@ -1,0 +1,28 @@
+import numpy as np
+
+# Ensure the image is loaded and in RGB format
+if 'img_rgb' in locals() and img_rgb is not None:
+    # Convert image to float to prevent clipping when adding noise
+    img_float = img_rgb.astype(np.float32)
+
+    # Define mean and standard deviation for Gaussian noise
+    mean = 0
+    std_dev = 25 # You can adjust this value to control the noise intensity
+
+    # Generate Gaussian noise with the same shape as the image
+    noise = np.zeros(img_float.shape, np.float32)
+    cv2.randn(noise, mean, std_dev)
+
+    # Add noise to the image
+    noisy_img_float = cv2.add(img_float, noise)
+
+    # Clip values to stay within [0, 255] and convert back to uint8
+    noisy_img_rgb = np.clip(noisy_img_float, 0, 255).astype(np.uint8)
+
+    # Display the noisy image
+    plt.imshow(noisy_img_rgb)
+    plt.title('Image with Gaussian Noise')
+    plt.axis('off')
+    plt.show()
+else:
+    print("Error: 'img_rgb' is not defined or is empty. Please run the previous cell to load the image first.")
